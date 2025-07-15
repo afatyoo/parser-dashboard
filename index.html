@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Data Parsing & Grafik P</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.3.3/highcharts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.3.3/modules/exporting.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.3.3/modules/export-data.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.3.3/modules/series-label.js"></script>
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --card-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      --card-hover-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .main-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      margin-top: 20px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .header-section {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>');
+      background-size: cover;
+    }
+
+    .header-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-section p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .content-section {
+      padding: 2rem;
+    }
+
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--card-hover-shadow);
+    }
+
+    .card-header {
+      background: var(--success-gradient);
+      color: white;
+      border: none;
+      padding: 1.5rem;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .table {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .table thead th {
+      background: var(--primary-gradient);
+      color: white;
+      font-weight: 600;
+      border: none;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .table tbody td {
+      padding: 1rem;
+      text-align: center;
+      vertical-align: middle;
+      border-bottom: 1px solid #eee;
+    }
+
+    .table tbody tr:hover {
+      background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      transform: scale(1.02);
+      transition: all 0.3s ease;
+    }
+
+    .chart-container {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .stats-card {
+      background: var(--secondary-gradient);
+      color: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+    }
+
+    .stats-card h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats-card p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .section-title {
+      color: #333;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title i {
+      color: #667eea;
+      font-size: 1.5rem;
+    }
+
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_paginate {
+      margin-top: 1rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      border-radius: 8px;
+      margin: 0 2px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      background: var(--primary-gradient) !important;
+      border: none !important;
+      color: white !important;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .header-section h1 {
+        font-size: 2rem;
+      }
+      
+      .content-section {
+        padding: 1rem;
+      }
+      
+      .stats-card {
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="main-container">
+      <div class="header-section">
+        <h1><i class="fas fa-chart-line"></i> Data Parsing Dashboard</h1>
+        <p>Analisis Data dan Visualisasi Grafik P</p>
+      </div>
+
+      <div class="content-section">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="stats-card fade-in">
+              <h3 id="totalRows">3</h3>
+              <p><i class="fas fa-database"></i> Total Data</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stats-card fade-in">
+              <h3 id="avgP">0.245</h3>
+              <p><i class="fas fa-calculator"></i> Rata-rata P</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stats-card fade-in">
+              <h3 id="maxP">0.303</h3>
+              <p><i class="fas fa-arrow-up"></i> Nilai P Tertinggi</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="fade-in">
+          <h2 class="section-title">
+            <i class="fas fa-table"></i>
+            Tabel Hasil Parsing Data
+          </h2>
+          <div class="table-container">
+            <table id="dataTable" class="table table-hover">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-key"></i> K</th>
+                  <th><i class="fas fa-chart-bar"></i> L</th>
+                  <th><i class="fas fa-chart-area"></i> M</th>
+                  <th><i class="fas fa-chart-pie"></i> N</th>
+                  <th><i class="fas fa-chart-line"></i> O</th>
+                  <th><i class="fas fa-star"></i> P</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="fade-in">
+          <h2 class="section-title">
+            <i class="fas fa-chart-line"></i>
+            Visualisasi Grafik Nilai P
+          </h2>
+          <div class="chart-container">
+            <div id="chartContainer" style="height: 500px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+ fetch('data.json')
+  .then(res => res.json())
+  .then(sampleData => {
+    // Populate table
+    const tableBody = $('#dataTable tbody');
+    tableBody.empty();
+    sampleData.forEach(row => {
+      tableBody.append(`
+        <tr>
+          <td>${row.K}</td>
+          <td>${row.L}</td>
+          <td>${row.M}</td>
+          <td>${row.N}</td>
+          <td>${row.O}</td>
+          <td>${row.P}</td>
+        </tr>
+      `);
+    });
+
+      // Initialize DataTable
+      $('#dataTable').DataTable({
+        responsive: true,
+        pageLength: 10,
+        language: {
+          search: "Cari:",
+          lengthMenu: "Tampilkan _MENU_ data",
+          info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+          paginate: {
+            previous: "Sebelumnya",
+            next: "Selanjutnya"
+          }
+        }
+      });
+
+      // Update stats
+      const totalRows = sampleData.length;
+      const avgP = (sampleData.reduce((sum, item) => sum + item.P, 0) / totalRows).toFixed(3);
+      const maxP = Math.max(...sampleData.map(item => item.P)).toFixed(3);
+      
+      $('#totalRows').text(totalRows);
+      $('#avgP').text(avgP);
+      $('#maxP').text(maxP);
+
+      // Create chart
+      const categories = sampleData.map(item => item.K);
+      const seriesData = sampleData.map(item => item.P);
+
+      Highcharts.chart('chartContainer', {
+        chart: { 
+          type: 'line',
+          backgroundColor: 'transparent'
+        },
+        title: { 
+          text: 'Tren Nilai P berdasarkan K',
+          style: {
+            fontSize: '1.5rem',
+            fontWeight: '600',
+            color: '#333'
+          }
+        },
+        xAxis: { 
+          categories: categories, 
+          title: { 
+            text: 'Nilai K',
+            style: { color: '#667eea', fontWeight: '600' }
+          },
+          gridLineColor: '#e0e0e0'
+        },
+        yAxis: { 
+          title: { 
+            text: 'Nilai P',
+            style: { color: '#667eea', fontWeight: '600' }
+          },
+          gridLineColor: '#e0e0e0'
+        },
+        series: [{
+          name: 'Nilai P',
+          data: seriesData,
+          color: {
+            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+            stops: [
+              [0, '#667eea'],
+              [1, '#764ba2']
+            ]
+          },
+          marker: {
+            fillColor: 'white',
+            lineWidth: 3,
+            lineColor: '#667eea',
+            radius: 6
+          },
+          lineWidth: 3
+        }],
+        tooltip: {
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          style: {
+            color: 'white'
+          },
+          formatter: function() {
+            return '<b>K: ' + this.x + '</b><br/>Nilai P: <b>' + this.y + '</b>';
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        credits: {
+          enabled: false
+        },
+        exporting: {
+          enabled: true,
+          buttons: {
+            contextButton: {
+              menuItems: ['downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG']
+            }
+          }
+        }
+      });
+
+      // Add pulse animation to stats cards
+      $('.stats-card').addClass('pulse');
+      
+      // Remove pulse after 3 seconds
+      setTimeout(() => {
+        $('.stats-card').removeClass('pulse');
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
