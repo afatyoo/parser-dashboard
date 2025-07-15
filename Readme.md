@@ -1,13 +1,13 @@
 DATA PARSING & VISUAL DASHBOARD
 ===============================
-
+```
 Author: Muhammad Afatyo Ikhsan
 NPM   : 24011110157
 Deskripsi:
 Aplikasi ini adalah jawaban dari UAS Algoritma Struktur Data. Aplikasi ini digunakan untuk melakukan parsing data dari kolom (A, B, D, F, H, I),
 menghitung kolom C sebagai rata-rata B per 3 baris, dan menampilkan hasil parsing 
 dalam bentuk tabel interaktif dan grafik visual menggunakan Bootstrap, DataTables, dan Highcharts.
-
+```
 ----------------------------------------
 STRUKTUR KODE
 ----------------------------------------
