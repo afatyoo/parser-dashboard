@@ -12,6 +12,7 @@ dalam bentuk tabel interaktif dan grafik visual menggunakan Bootstrap, DataTable
 ----------------------------------------
 STRUKTUR KODE
 ----------------------------------------
+```
 ├─ index.html          -> Dashboard utama (Bootstrap + DataTables + Highcharts)
 ├─ parser.php          -> Script untuk parsing dan generate data.json
 ├─ data.json           -> File hasil dari parser.php (auto-generated)
@@ -22,7 +23,7 @@ STRUKTUR KODE
 │  └─ series-label.js
 ├─ Dockerfile          -> Image PHP + Apache untuk menjalankan parser dan index
 └─ docker-compose.yml  -> Compose file untuk menjalankan aplikasi dengan mudah
-
+```
 ----------------------------------------
 CARA MENJALANKAN DENGAN DOCKER
 ----------------------------------------
